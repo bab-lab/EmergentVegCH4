@@ -25,8 +25,8 @@ A subset of chamber and bubble trap samples were sent to Stanford University for
 To understand potential CH4 production in the presence of aquatic vegetation (benthic mosses), we established three treatments, sediment only, sediment + benthic, and benthic only, which was exposed to 20C and 30C. Headspace concentrations were sampled periodically across 10 days, and post-incubation two replicates from each treatment and temperature were analyzed for organic matter content and C/N ratios.
 
 **SOFTWARE/TOOLS USED** <br>
-- R version TBD
-- R packages used:
+- R version 4.6.0
+- R packages used: here(), tidyverse(), janitor(), ggplot2(), lme4(), lmerTest(), glmmTMB(), emmeans(), ggsignif(), patchwork(), scales()
 
 **DOI/PERSISTENT IDENTIFIERS** <br>
 Hyperlinked DOI for this dataset: TBD
