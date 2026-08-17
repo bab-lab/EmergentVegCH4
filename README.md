@@ -65,8 +65,8 @@ Citation for Kelsey McGuire's thesis: TBD
   - `EVCH4_Figures.R` contains the code for the production of figures found within KM's thesis and the in-prep paper.
   - `EVCH4_ModelRunning.R` contains the functions for running repetitive model structures and filtering outputs based on significance values.
   - `EVCH4_Stats.R` contains the final model outputs and summaries for the statistics used in KM's thesis and in-prep paper.
-- `data/` contains all the data used in this project. This subdirectory contains a Metadata file `Metadata_EmergentVegCH4_L&O_2026.docx` which holds all relevant information pertaining to data collection methodologies and explanations. Alongside the metadata file, you can find the csv's with relevant data from the project, named as follows:
-  - 
+- `data/` contains all the data used in this project. This subdirectory contains a Metadata file `Metadata_EmergentVegCH4_L&O_2026.docx` which holds all relevant information pertaining to data collection methodologies and explanations. Alongside the metadata file, you can find the csv's with relevant data from the project, named as follows: <br>
+
 
 **ACKNOWLEDGEMENTS** <br>
 We thank our colleagues Myrna Simpson and Jenny Oh (University of Toronto) for their helpful discussions. We also thank the University of Toronto ANALEST facility staff for their technical assistance.
