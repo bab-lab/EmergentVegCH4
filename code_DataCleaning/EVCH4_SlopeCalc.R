@@ -1,16 +1,17 @@
-# MSc Project: Towards a Comprehensive Understanding of Methane Flux:
-# The Role of Aquatic Vegetation
+# MSc Project: A little sedge goes a long way: emergent vegetation as a key driver of littoral methane flux
 
-# Function for calculating the slopes from interval chamber data
+# Function for calculating GHG slopes from interval chamber data.
 
-# 08/15/2025 (Last Edit: 08/15/2025)
+# 08/15/2025 (Last Edit: 08/17/2026)
 # Author: Kelsey McGuire
-# kmcgu@mail.ubc.ca
+# kmcgu@mail.ubc.ca; kmcguire.9@outlook.com
 
+# LOAD RELEVANT PACKAGES ----
 library(dplyr)
 library(lubridate)
 library(broom)
 
+# FUNCTION DESCRIPTION ----
 ChamberSlopeCalc <- function(chamber_data) {
   # ------------------------------------------------------------------------ #
   # Arguments:
@@ -73,7 +74,8 @@ ChamberSlopeCalc <- function(chamber_data) {
     }
   }
 
-  write_csv(chamber_slopes, "~/Desktop/masters/data/msc-aquatic-ch4/flux-calculations/chamber_calculations/chamber_slopes.csv") # write a csv for slopes to manually see if there's anything wonky
+  # choose to write a slope only csv if you'd like
+  # write_csv(chamber_slopes, "~/Desktop/masters/data/msc-aquatic-ch4/flux-calculations/chamber_calculations/chamber_slopes.csv") # write a csv for slopes to manually see if there's anything wonky
 
   # set up constants and other values needed for flux calculations
   IGL <- 0.08206
@@ -170,11 +172,11 @@ ChamberSlopeCalc <- function(chamber_data) {
     ) %>%
     select(-q1, -q3, -iqr, -lower_bound, -upper_bound)
   
-  print(head(chamber_data_clean))
+  # print(head(chamber_data_clean))
   
-  plant_med <- chamber_data_clean %>%
+  plant_med <- chamber_data_clean %>% # get plant-mediated specific measurements
     
-    group_by(sample_date, site_group, zone, type) %>%
+    group_by(sample_date, site_group, zone, type) %>% # find the average flux over the zone
     summarise(
       ch4_flux_mgm2d1  = mean(ch4_flux_mgm2d1, na.rm = TRUE),
       co2_flux_mgm2d1  = mean(co2_flux_mgm2d1, na.rm = TRUE),
@@ -183,8 +185,8 @@ ChamberSlopeCalc <- function(chamber_data) {
       .groups = "drop"
     ) %>%
     
-    pivot_wider(
-      names_from = type,
+    pivot_wider( 
+      names_from = type, # pivot values longer so vegetated and open measurements are side by side based on site
       values_from = c(
         ch4_flux_mgm2d1,
         co2_flux_mgm2d1,
@@ -193,7 +195,7 @@ ChamberSlopeCalc <- function(chamber_data) {
       )
     ) %>%
     
-    group_by(zone) %>%
+    group_by(zone) %>% # subtract open values from vegetated to get the final plant-med value
     mutate(
       plant_ch4_flux_mgm2d1  = ch4_flux_mgm2d1_V - ch4_flux_mgm2d1_O,
       plant_co2_flux_mgm2d1  = co2_flux_mgm2d1_V - co2_flux_mgm2d1_O,
@@ -201,10 +203,10 @@ ChamberSlopeCalc <- function(chamber_data) {
       plant_cco2_flux_mgm2d1 = cco2_flux_mgm2d1_V - cco2_flux_mgm2d1_O,
       ) %>%
     mutate(
-      plant_cch4_flux_mgm2d1 = case_when(
-        plant_cch4_flux_mgm2d1 < 0 ~ cch4_flux_mgm2d1_V,
-        is.na(plant_cch4_flux_mgm2d1) ~ cch4_flux_mgm2d1_V,
-      TRUE ~ plant_cch4_flux_mgm2d1
+      plant_cch4_flux_mgm2d1 = case_when( # make sure the erreonous data is accounted for ...
+        plant_cch4_flux_mgm2d1 < 0 ~ cch4_flux_mgm2d1_V,# if any plant-mediated are below zero ... 
+        is.na(plant_cch4_flux_mgm2d1) ~ cch4_flux_mgm2d1_V, # or missing, replace the value with the vegetated zone average
+      TRUE ~ plant_cch4_flux_mgm2d1 # if that's not the case keep computed value
       )) %>%
     ungroup() %>%
     mutate(site = paste0(site_group, "V")) %>%
@@ -214,9 +216,9 @@ ChamberSlopeCalc <- function(chamber_data) {
       plant_cch4_flux_mgm2d1,
       plant_co2_flux_mgm2d1,
       plant_cco2_flux_mgm2d1,
-    )
+    ) # keep only relevant columns
 
-  chamber_data <- chamber_data %>%
+  chamber_data <- chamber_data %>% # bind the plant-mediated data with other chamber data
     left_join(plant_med %>%
                 select(sample_date, site, zone,
                        plant_ch4_flux_mgm2d1, plant_co2_flux_mgm2d1,

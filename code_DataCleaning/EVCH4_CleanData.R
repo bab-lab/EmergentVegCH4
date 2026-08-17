@@ -1,20 +1,21 @@
-# MSc Project: Towards a Comprehensive Understanding of Methane Flux:
-# The Role of Aquatic Vegetation
+# MSc Project: A little sedge goes a long way: emergent vegetation as a key driver of littoral methane flux
 
 # Function for merging and cleaning relevant datasets (LICOR single inject,
 # Environmental Variables, BCWS Weather)
 
-# 07/15/2025 (Last Edit: 10/07/2025)
+# 07/15/2025 (Last Edit: 08/17/2026)
 # Author: Kelsey McGuire
-# kmcgu@mail.ubc.ca
+# kmcgu@mail.ubc.ca; kmcguire.9@outlook.com
 
+# LOAD RELEVANT PACKAGES/LOCAL FUNCTIONS
 library(dplyr)
 library(lubridate)
 library(zoo)
 library(purrr)
-try(source('~/Desktop/masters/data/msc-aquatic-ch4/flux-calculations/headspace_calculations/Cawley_Dissolved_Gases_Function_2018.R'))
-# install.packages("conflicted")
-source('~/Desktop/masters/data/msc-aquatic-ch4/functions/SlopeCalc.R')
+library(here)
+
+source(here::here("code_DataCleaning", "Cawley_Dissolved_Gases_Function_2018.R"))
+source(here::here("code_DataCleaning", "EVCH4_SlopeCalc.R"))
 
 # reduce package conflicts which use the same function to perform different tasks
 library(conflicted)
@@ -240,6 +241,18 @@ CleanBCWS <- function(folder_path, stationcode) {
 }
 
 CleanWaterSamples <- function(folderpath_watercsvs) {
+	# ------------------------------------------------------------------------ #
+	# Arguments:
+	# - folderpath_watercsvs [str]: folder path to where all relevant water chemistry
+	#		csv's (i.e., Anions, Nutrients) are contained. This is based on the csv structure
+	#		used by U of Alberta NRAL Lab. 
+	#
+	# Purpose:
+	# - Combines the different water chemistry columns togehter to form one full dataset
+	#
+	# Output:
+	# - Combined water chemistry dataset from all relevant samples.
+	# ------------------------------------------------------------------------ #
   water_csvs <- list.files(folderpath_watercsvs, full.names = T) # get full folder path names of csv's in a list
   ## water_csvs will list files alphabetically, so processing follows that order
 
@@ -279,8 +292,23 @@ CleanWaterSamples <- function(folderpath_watercsvs) {
   return(water_chem)
 }
 
-CleanVeg <- function(field_veg_data,
-                     surface_area_csv, rgb_folderpath) {
+CleanVeg <- function(field_veg_data, surface_area_csv, rgb_folderpath) {
+	# ------------------------------------------------------------------------ #
+	# Arguments:
+	# - field_veg_data [str]: folder path to the csv containing the field vegetation
+	#		data, such as number of shoots, biomass, etc. 
+	# - surface_area_csv [str]: folder path of the csv from ImageJ that contains the 
+	#		data on percent cover and area measures from field photos.
+	# - rgb_folderpath [str]: folder path of the csv from ImageJ that contains all RGB
+	# 	band information.
+	#
+	# Purpose:
+	# - To clean and combine all relevant data relating to vegetation metrics specifically
+	#		and have it in a useable format
+	#
+	# Output:
+	# - Dataframe that contains any relevant vegetation data (without CH4 fluxes)
+	# ------------------------------------------------------------------------ #
   field_veg_data <- read.csv(field_veg_data)
   # print(names(field_veg_data))
   veg_surfarea <- read.csv(surface_area_csv)
@@ -355,6 +383,24 @@ CleanVeg <- function(field_veg_data,
 }
 
 CleanHOBOs <- function(hobo_folderpath, hobo_rangemetafile) {
+	# ------------------------------------------------------------------------ #
+	# Arguments:
+	# - hobo_folderpath [str]: folder where relevant HOBO *csv* files are found. 
+	#		May need to convert .hobo files to csv before running function.
+	# - hobo_rangemetafile [str]: the file that contains the information on the 
+	#		date and times in which hobo loggers are launched and removed, to filter 
+	#		data that falls beyond that
+	#
+	# Purpose:
+	# - Clean HOBO logger data to make it readable, and then calculate daily, 
+	#		3-day and 7-day averages of temperature from the 2-hour interval data. 
+	#
+	# Output:
+	# - List of dataframes with various specified uses including (1) raw dataset
+	#		with all 2-hour data; (2) dataset with temperature data based on the
+	#		placement (i.e., Air, Sediment); (3) dataset with temperature based on 
+	#		specific hobo (i.e., Zone 1 Air Open); (4) dataset with placement as columns.
+	# ------------------------------------------------------------------------ #
   # list out the hobo file names including and excluding the path
   hobo_csvs_fn <- list.files(hobo_folderpath, full.names = T)
   hobo_csvs <- list.files(hobo_folderpath)
@@ -519,15 +565,33 @@ CleanData <- function(licor_csvpath,
   # - stationcode [int]: integer number for relevant weather station code.
   #   BCWS files contain all data from their weather stations so best to narrow
   #   it to the relevant stations (i.e., Wheeler Lake uses Boya Station data = 445)
+	# - hobo_folderpath [str]: folder where relevant HOBO *csv* files are found. 
+	#		May need to convert .hobo files to csv before running function.
+	# - hobo_rangemetafile [str]: the file that contains the information on the 
+	#		date and times in which hobo loggers are launched and removed, to filter 
+	#		data that falls beyond that.
+	# - field_veg_data [str]: folder path to the csv containing the field vegetation
+	#		data, such as number of shoots, biomass, etc. 
+	# - surface_area_csv [str]: folder path of the csv from ImageJ that contains the 
+	#		data on percent cover and area measures from field photos.
+	# - rgb_folderpath [str]: folder path of the csv from ImageJ that contains all RGB
+	# 	band information.
+	# - bubcsv_file [str]: .csv file path as a string, differs depending on if the
+	#		working directory is set or not - should be the csv containing bubble data 
+	#		from sampling days.
   #
   # Purpose:
-  # - Combines the csv's for relevant sampling days from BCWS weather station,
-  #   narrows the data to only the relevant station, and cleans the data to
-  #   prep it for easier merging between other datasets.
+  # - Takes in all relevant CSV's to form one cleaned dataset with relevant data.
+	#   For specific data cleaning processes and requirements, look at the relevant 
+	#		function descriptions above. 
   #
   # Output:
-  # - dataframe with weather data from the chosen station which is in proper
-  #   format for post-processing and visualization.
+  # - list containing 5 datasets. (1) raw data is the combined data before any daily
+	#		averages or cleaning. (2) clean data is the data that has been averaged on a
+	#		daily time scale, has been filtered for outliers, and keeps data from the relevant
+	#		sampling days. (3) dissolved only data with environmental variables over the 
+	#   entire sampling period. (4) Chamber-based data with environmental variables across
+	# 	the sampling period. (5) Bubble only data from the entire sampling period.
   # ------------------------------------------------------------------------ #
 
   # load in each of the independently cleaned datasets (go to their respective

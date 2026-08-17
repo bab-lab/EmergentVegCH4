@@ -1,8 +1,11 @@
-# Clean Data ----
+# MSc Project: A little sedge goes a long way: emergent vegetation as a key driver of littoral methane flux
 
-# Feb 7, 2026 (Last Update: April 1, 2026)
-# Kelsey McGuire, McKenzie Kuhn
-# UBC Boreal-Arctic Biogeochemistry Lab (bab-lab.github.io)
+# Script containing any and all subsets of data and post-processing after intitial data cleaning.
+# Incubation and Isotope Data cleaning is contained within this script.
+
+# 02/07/2026 (Last Update: 08/17/2026)
+# Author: Kelsey McGuire
+# kmcgu@mail.ubc.ca; kmcguire.9@outlook.com
 
 setwd('~/Desktop/masters/data/msc-aquatic-ch4/')
 source('~/Desktop/masters/data/msc-aquatic-ch4/functions/LICORFunctions.R')
