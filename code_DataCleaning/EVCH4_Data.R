@@ -7,11 +7,10 @@
 # Author: Kelsey McGuire
 # kmcgu@mail.ubc.ca; kmcguire.9@outlook.com
 
-setwd('~/Desktop/masters/data/msc-aquatic-ch4/')
-source('~/Desktop/masters/data/msc-aquatic-ch4/functions/LICORFunctions.R')
-source('~/Desktop/masters/data/msc-aquatic-ch4/functions/CleanData.R')
-source('~/Desktop/masters/data/msc-aquatic-ch4/functions/SlopeCalc.R')
-source('~/Desktop/masters/data/msc-aquatic-ch4/functions/ModelRunning.R')
+# INSTALL LOCAL FUNCTIONS/LIBRARIES
+source(here::here('code_DataCleaning', 'CleanData.R'))
+source(here::here('code_DataCleaning', 'SlopeCalc.R'))
+source(here::here('code_PaperFiguresStats', 'ModelRunning.R'))
 
 # INSTALL/LOAD GLOBAL LIBRARIES
 # install.packages("datetime")
@@ -35,6 +34,7 @@ library(broom)
 library(janitor)
 
 # LOAD IN DATA ----
+# replace csv paths with your own ...
 datasets <- CleanData(licor_csvpath = '~/Desktop/masters/data/msc-aquatic-ch4/licor-data-methane2025/WHE-methane-LICOR-jan19-clean.csv',
                       env_csvpath = '~/Desktop/masters/data/msc-aquatic-ch4/flux-calculations/chamber_calculations/environmental-variables-aug18.csv',
                       bcws_folderpath = '~/Desktop/masters/data/msc-aquatic-ch4/tachila-weather', 445,
@@ -50,8 +50,6 @@ clean_data <- datasets$clean %>%
   filter(!is.na(cch4_flux_mgm2d1)) %>% # filter any NA values for flux since this will be our key variable
   mutate(log_cch4_flux_mgm2d1 = log(cch4_flux_mgm2d1 + 1),
          log_plant_cch4_flux_mgm2d1 = log(plant_cch4_flux_mgm2d1 + 1))
-
-write.csv(raw, file = "~/Desktop/masters/paper_submission/data/RawData.csv")
 
 # remove outliers from whole dataset ----
 # find outlier boundaries
@@ -692,7 +690,7 @@ SplitNoOutIncProd <- NoOutIncProd %>%
             log_avg_production_dry_umol = mean(log_umol_ch4_dry_gw_1_hr_1, na.rm = TRUE),
             log_se_dry_umol = sd(log_umol_ch4_dry_gw_1_hr_1, na.rm = TRUE) / sqrt(sum(!is.na(log_umol_ch4_dry_gw_1_hr_1))))
 
-# isotopes ----
+# ISOTOPES ----
 isotopes <- read.csv("~/Desktop/masters/data/msc-aquatic-ch4/isotopes/results/McGuire_Lakes_d13C-CH4.csv")
 
 ## clean up data for plotting ----
@@ -930,32 +928,3 @@ multistudy <- multistudy %>%
            dataset == "This Study (2025)" ~ "Northern Boreal",
            dataset == "Desrosiers (2022)" ~ "Temperate"
          ))   # order you want
-
-# subset <- clean_data %>%
-#   select(-c(raw_ch4_ppm, raw_co2_ppm, ch4_ppm.x, co2_ppm.x, sample_time,
-#             HOURLY_PRECIPITATION, HOURLY_TEMPERATURE, HOURLY_RELATIVE_HUMIDITY, HOURLY_WIND_SPEED, HOURLY_WIND_DIRECTION, PRECIP_RGT, 
-#             light_lux_mean_BOT, light_lux_mean_SUR, Red_mean, Red_sd, Green_mean, Green_sd, Blue_mean, Blue_sd, 
-#             ch4_slope, co2_slope, ch4_flux_umolm2s1, ch4_flux_mgm2d1, plant_ch4_flux_mgm2d1, co2_flux_umolm2s1, co2_flux_mgm2d1, plant_co2_flux_mgm2d1,
-#             days_deploy_t, sample_taken, tot_vol_ml, co2_ppm.y, ch4_ppb, ch4_ppm.y, ch4_ppm_postdil, co2_ppm_postdil, avg_ch4_ppm, avg3day_ch4_ppm, avg7day_ch4_ppm))
-# 
-# subset_pp <- perfect_pairs %>%
-#   select(-c(raw_ch4_ppm, raw_co2_ppm, ch4_ppm.x, co2_ppm.x, sample_time,
-#             HOURLY_PRECIPITATION, HOURLY_TEMPERATURE, HOURLY_RELATIVE_HUMIDITY, HOURLY_WIND_SPEED, HOURLY_WIND_DIRECTION, PRECIP_RGT,
-#             light_lux_mean_BOT, light_lux_mean_SUR, Red_mean, Red_sd, Green_mean, Green_sd, Blue_mean, Blue_sd,
-#             ch4_slope, co2_slope, ch4_flux_umolm2s1, ch4_flux_mgm2d1, plant_ch4_flux_mgm2d1, co2_flux_umolm2s1, co2_flux_mgm2d1, plant_co2_flux_mgm2d1,
-#             days_deploy_t, sample_taken, tot_vol_ml, co2_ppm.y, ch4_ppb, ch4_ppm.y, ch4_ppm_postdil, co2_ppm_postdil, avg_ch4_ppm, avg3day_ch4_ppm, avg7day_ch4_ppm))
-# 
-# subset_za <- clean_data %>%
-#   select(-c(raw_ch4_ppm, raw_co2_ppm, ch4_ppm.x, co2_ppm.x, sample_time,
-#             HOURLY_PRECIPITATION, HOURLY_TEMPERATURE, HOURLY_RELATIVE_HUMIDITY, HOURLY_WIND_SPEED, HOURLY_WIND_DIRECTION, PRECIP_RGT,
-#             light_lux_mean_BOT, light_lux_mean_SUR, Red_mean, Red_sd, Green_mean, Green_sd, Blue_mean, Blue_sd,
-#             ch4_slope, co2_slope, ch4_flux_umolm2s1, ch4_flux_mgm2d1, plant_ch4_flux_mgm2d1, co2_flux_umolm2s1, co2_flux_mgm2d1, plant_co2_flux_mgm2d1,
-#             days_deploy_t, sample_taken, tot_vol_ml, co2_ppm.y, ch4_ppb, ch4_ppm.y, ch4_ppm_postdil, co2_ppm_postdil, avg_ch4_ppm, avg3day_ch4_ppm, avg7day_ch4_ppm)) %>%
-#   group_by(sample_date, zone, veg_class) %>%
-#   summarise(across(where(is.numeric), list(n = ~sum(!is.na(.x)),
-#                                            mean = ~mean(.x, na.rm = TRUE),
-#                                            median = ~median(.x, na.rm = TRUE),
-#                                            se = ~ sd(.x, na.rm = TRUE) / sqrt(sum(!is.na(.x))))))
-# 
-# 
-# write.csv(subset_za, file = "~/Desktop/masters/data/msc-aquatic-ch4/cleaned-data/cleaned_zone_avg.csv")

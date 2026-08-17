@@ -1,7 +1,14 @@
-# load data ----
-setwd('~/Desktop/masters/data/msc-aquatic-ch4/')
-source('~/Desktop/masters/data/msc-aquatic-ch4/functions/Data.R')
-source('~/Desktop/masters/data/msc-aquatic-ch4/functions/ModelRunning.R')
+# MSc Project: A little sedge goes a long way: emergent vegetation as a key driver of littoral methane flux
+
+# Script containing the figure outputs for thesis and in prep. paper.
+
+# 03/14/2026 (Last Update: 08/17/2026)
+# Author: Kelsey McGuire
+# kmcgu@mail.ubc.ca; kmcguire.9@outlook.com
+
+# LOAD DATA AND LIBRARIES ----
+source(here::here('code_DataCleaning', 'EVCH4_Data.R'))
+source(here::here('code_PaperFiguresStats', 'EVCH4_ModelRunning.R'))
 library(janitor)
 library(patchwork)
 library(ggnewscale)

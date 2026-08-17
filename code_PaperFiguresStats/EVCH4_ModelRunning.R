@@ -1,3 +1,11 @@
+# MSc Project: A little sedge goes a long way: emergent vegetation as a key driver of littoral methane flux
+
+# Functions for running repetitive model setups -> lm; mlm; glmm, anovas
+
+# 03/16/2026 (Last Edit: 08/17/2026)
+# Author: Kelsey McGuire
+# kmcgu@mail.ubc.ca; kmcguire.9@outlook.com
+
 # load in regression functions ----
 ## simple linear regression function ----
 runlm <- function(dataset, response, predictor) {

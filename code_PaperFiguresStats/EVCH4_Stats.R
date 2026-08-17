@@ -1,14 +1,14 @@
-# Models used within Thesis/Paper ----
-#
-# Kelsey McGuire, McKenzie Kuhn
-# UBC Boreal-Arctic Biogeochemistry Lab (bab-lab.github.io)
-#
-# Potential New Implementations:
-#   -
+# MSc Project: A little sedge goes a long way: emergent vegetation as a key driver of littoral methane flux
+
+# Script containing the stats contained within thesis and in prep. paper.
+
+# 03/14/2026 (Last Update: 08/17/2026)
+# Author: Kelsey McGuire
+# kmcgu@mail.ubc.ca; kmcguire.9@outlook.com
 
 # LOAD LOCAL PACKAGES ----
-setwd('~/Desktop/masters/data/msc-aquatic-ch4/')
-source('~/Desktop/masters/data/msc-aquatic-ch4/functions/Data.R')
+source(here::here('code_DataCleaning', 'EVCH4_Data.R'))
+source(here::here('code_PaperFiguresStats', 'EVCH4_ModelRunning.R'))
 
 # install.packages("glmmTMB")
 # install.packages("statmod")
