@@ -29,7 +29,6 @@ library(multcomp)
 library(lme4)
 library(lmerTest)
 conflicted::conflicts_prefer(lmerTest::lmer)
-library(tidyverse)
 library(broom)
 library(janitor)
 

@@ -15,7 +15,6 @@ source(here::here('code_PaperFiguresStats', 'EVCH4_ModelRunning.R'))
 # install.packages("tweedie")
 library(statmod)
 library(glmmTMB)
-library(tweedie)
 library(emmeans)
 
 # GENERALIZED LINEAR MIXED MODELS ----
