@@ -65,8 +65,15 @@ Citation for Kelsey McGuire's thesis: TBD
   - `EVCH4_Figures.R` contains the code for the production of figures found within KM's thesis and the in-prep paper.
   - `EVCH4_ModelRunning.R` contains the functions for running repetitive model structures and filtering outputs based on significance values.
   - `EVCH4_Stats.R` contains the final model outputs and summaries for the statistics used in KM's thesis and in-prep paper.
-- `data/` contains all the data used in this project. This subdirectory contains a Metadata file `Metadata_EmergentVegCH4_L&O_2026.docx` which holds all relevant information pertaining to data collection methodologies and explanations. Alongside the metadata file, you can find the csv's with relevant data from the project, named as follows: <br>
-
+- `data_csvs/` contains all the data used in this project. This subdirectory contains a Metadata file `Metadata_EmergentVegCH4_L&O_2026.docx` which holds all relevant information pertaining to data collection methodologies and explanations. Alongside the metadata file, you can find the csv's with relevant data from the project, named as follows: <br>
+  - `Data1_ChamberCH4.csv`: Chamber-based flux data from the 2025 field campaign.
+  - `Data2_BubbleTrapCH4.csv`: Bubble trap flux data from the 2025 field campaign.
+  - `Data3_VegetationData.csv`: Vegetation data (i.e., biomass, greenness) from the 2025 field campaign.
+  - `Data4_EnvironmentalData.csv`: Environmental  data (i.e., depth, pH, temperature) from the 2025 field campaign.
+  - `Data5_CH4Isotopes.csv`: Isotope data from the 2025 field campaign.
+  - `Data6_WaterChem.csv`: Lab analysed water chemistry data from the 2025 field campaign.
+  - `Data7_Incubation.csv`: Incubation data from the potential CH4 production incubation in February 2026.
+- `data_xlsx/` contains excel spreadsheets for the data used in this project. Files align with the above csv's, but have self-contained ReadME's as the first sheet within the .xlsx file. 
 
 **ACKNOWLEDGEMENTS** <br>
 We would like to acknowledge the help of Robbie Porter, Lisa Shephard, and Tanya Ball from the Dena Kayeh Institute, alongside Kaitlyn Chen, Graeme Morey, Samantha Solvis de Ovando and other members of the BAB Lab and UBC’s Department of Geography during field and laboratory work. The authors acknowledge the use of facilities and technical assistance of the Stanford Stable Isotope Biogeochemistry Laboratory (SIBL) Core Facility (RRID: SCR_023253). The research utilized the Picarro G2201-i Isotopic Analyzer, which was purchased with funding from Stanford University Community of Shared Advanced Research Platforms (C-ShaRP) (RRID:SCR_022986). Funding for this study was supported by the Natural Sciences and Engineering Research Council, University of British Columbia initiatives, and external partners. K.M. received funding through NSERC CGS-M, the Weston Family and Wildlife Conservation Society of Canada Boreal Research Fellowship, the Northern Scientist Training program, and UBC Graduate Student Research Awards. Further funding was provided through M.A.K.’s NSERC Discovery Grant and Northern Supplements.
